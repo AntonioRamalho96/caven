@@ -1,0 +1,4 @@
+namespace b
+{
+    void print();
+} 
