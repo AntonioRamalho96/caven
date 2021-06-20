@@ -4,8 +4,8 @@ SRC_DIR:=src
 TEST_DIR:=test
 EXEC_DIR:=executables
 BUILD_DIR:=./build
-PROJ_NAME:=$(shell basename $(CURDIR))
 
+PROJ_NAME:=$(shell basename $(CURDIR))
 SHARE_DIR:=$(BUILD_DIR)/$(PROJ_NAME)$(VERSION)
 SHARE_INCLUDE_DIR:=$(SHARE_DIR)/$(INC_DIR)
 SHARE_LIB:=$(SHARE_DIR)/lib/lib$(PROJ_NAME).a
@@ -32,47 +32,53 @@ INTERNAL_INC_FLAGS = -I$(INC_DIR) $(addprefix -I,$(shell find $(DEPS_DIR) -name 
 LIB_FLAGS = -L$(dir $(SHARE_LIB)) -l$(PROJ_NAME)
 LIB_FLAGS += $(addprefix -L,$(shell find $(DEPS_DIR) -name "lib" -type d)) $(addprefix -l,$(DEPS_NAMES))
 
-#share include files
-$(SHARE_INCLUDE_DIR)/%: $(INC_DIR)/%
-	@mkdir -p $(dir $@)
-	@cp $< $@
-
+#Compile objects
 $(OBJT_DIR)/%.o : $(SRC_DIR)/%.cpp $(DEPS_DIR)
 	@mkdir -p $(dir $@)
 	g++ $(INTERNAL_INC_FLAGS) -MMD -MP -fPIC -c $< -o $@ $(LIB_FLAGS)
-
+#Compile tests
+$(TEST_BUILD_DIR)/% : $(TEST_DIR)/%.cpp $(SHARE_LIB)
+	@mkdir -p $(dir $@)
+	g++ $(INTERNAL_INC_FLAGS) $(OBJTS) $< -o $@ $(LIB_FLAGS)
+#copy include files to build folder
+$(SHARE_INCLUDE_DIR)/%: $(INC_DIR)/%
+	@mkdir -p $(dir $@)
+	@cp $< $@
+#Create static library for project
 $(SHARE_LIB): $(OBJTS)
 	mkdir -p $(dir $@)
 	ar -rc $@ $<
 
-$(TEST_BUILD_DIR)/% : $(TEST_DIR)/%.cpp $(SHARE_LIB)
-	@mkdir -p $(dir $@)
-	g++ $(INTERNAL_INC_FLAGS) $(OBJTS) $< -o $@ $(LIB_FLAGS)
 
 $(DEPS_DIR):
-	@echo ----------------------
-	@echo Compiling Dependencies
-	@echo ----------------------
+ifneq ($(DEPS),)
+	@echo ----------------------------------------------------
+	@echo Compiling Dependencies of project $(PROJ_NAME)
+	@echo ----------------------------------------------------
 	@echo
 	@mkdir -p $(DEPS_DIR)
 	@for dep in $(DEPS) ; 												\
 		do DEP_NAME=$$( echo $$dep | sed 's/.*\///') ;  				\
 		echo Compiling $$dep ... ;										\
-		cd $$dep && $(MAKE) share ; 									\
-		cp -r $$dep/$(BUILD_DIR)/$$DEP_NAME $(CURDIR)/$(DEPS_DIR) ;  	\
-		cd $$dep && $(MAKE) clean ;										\
+		cd $$dep && $(MAKE) share && 									\
+		cp -r $$dep/$(BUILD_DIR)/$$DEP_NAME $(CURDIR)/$(DEPS_DIR) &&  	\
+		$(MAKE) clean ;													\
 	done
+else
+	@echo $(PROJ_NAME) has no dependencies
+endif
 
 print:
 	@echo $(DEPS)
 	@echo $(DEPS_NAMES)
 	@echo $(LIB_FLAGS)
 
+compile_dependencies: $(DEPS_DIR)
 compile_objects: $(OBJTS)
 compile_tests:   $(TEST_TARGETS)
 compile_lib: $(SHARE_LIB)
 share_headers: $(SHARED_HEADERS)
-share: share_headers compile_lib
+share: compile_dependencies share_headers compile_lib
 	@echo Shared $(PROJ_NAME)
 run_tests: compile_tests
 	for test in $(TEST_TARGETS) ; do $$test ; done
