@@ -6,7 +6,7 @@ Jump to the section you'd like to read
 1. [The problem and the solution (pitch bulshit)](#the-problem-and-the-solution)
 2. [Actual information about Caven](#actual-information)
 
-# The problem and the solution (pitch bulshit)
+# The problem and the solution
 
 ## Compiling in C made easy
 
@@ -37,7 +37,7 @@ javac -cp "./some_dir/more_jar_files.jar" MyClass.java # for a single dependency
 
 # Actual information
 
-*Caven allows to easily import other Caven projects*
+**Caven allows to easily import other Caven projects**
 
 This feature is what this is all about! Making code into well defined modules, that fit like legos.
 
@@ -45,7 +45,7 @@ This feature is what this is all about! Making code into well defined modules, t
 Caven allows simple modular development:
  - Caven projects have a well defined structure
  - Caven provides generic makefile (caven_make) for projects with the caven structure.
- - *Caven allows to easily import other Caven projects*
+ - **Caven allows to easily import other Caven projects**
 
 Caven also allows multiple levels of not giving a fuck:
  - Level 1: just import the caven_make in your make file and develop your project with no dependencies
