@@ -1,22 +1,18 @@
+PROJ_NAME:=$(shell basename $(CURDIR))
+DEPS_NAMES = $(shell for dep in $(DEPS); do echo $$dep | sed 's/.*\///' ; done)
 #directories
 INC_DIR:=include
 SRC_DIR:=src
 TEST_DIR:=test
 EXEC_DIR:=executables
 BUILD_DIR:=./build
-
-PROJ_NAME:=$(shell basename $(CURDIR))
 SHARE_DIR:=$(BUILD_DIR)/$(PROJ_NAME)$(VERSION)
 SHARE_INCLUDE_DIR:=$(SHARE_DIR)/$(INC_DIR)
 SHARE_LIB:=$(SHARE_DIR)/lib/lib$(PROJ_NAME).a
-
 HIDEN_HEADERS_DIR:=$(INC_DIR)/hide
 OBJT_DIR:=$(BUILD_DIR)/objects
 TEST_BUILD_DIR:=$(BUILD_DIR)/$(TEST_DIR)
-
-DEPS_NAMES = $(shell for dep in $(DEPS); do echo $$dep | sed 's/.*\///' ; done)
 DEPS_DIR = $(SHARE_DIR)/dependencies
-
 #files
 SRCS:=$(shell find $(SRC_DIR) -name "*.cpp")
 OBJTS:=$(SRCS:$(SRC_DIR)/%.cpp=$(OBJT_DIR)/%.o) 
@@ -25,13 +21,12 @@ PUBLIC_HEADERS= $(shell find $(INC_DIR) -not -path "$(HIDEN_HEADERS_DIR)/*" -typ
 SHARED_HEADERS= $(PUBLIC_HEADERS:$(INC_DIR)/%=$(SHARE_INCLUDE_DIR)/%)
 TEST_SRCS=$(shell find $(TEST_DIR) -name "*.cpp")
 TEST_TARGETS=$(TEST_SRCS:$(TEST_DIR)/%.cpp=$(TEST_BUILD_DIR)/%)
-
 #flags
 SHARE_INC_FLAGS = $(addprefix -I,$(shell find $(SHARE_DIR) -wholename "*/$(INC_DIR)" -type d))
 INTERNAL_INC_FLAGS = -I$(INC_DIR) $(addprefix -I,$(shell find $(DEPS_DIR) -name "$(INC_DIR)" -type d))
+ORGANIZED_LIBS = $(shell find $(DEPS_DIR) -type f -name *.a -printf "%d %p\n"|sort -n|sed 's/.*lib//;' | sed 's/.a//') #lib names sorted by depth
 LIB_FLAGS = -L$(dir $(SHARE_LIB)) -l$(PROJ_NAME)
-LIB_FLAGS += $(addprefix -L,$(shell find $(DEPS_DIR) -name "lib" -type d)) $(addprefix -l,$(DEPS_NAMES))
-
+LIB_FLAGS += $(addprefix -L,$(shell find $(DEPS_DIR) -name "lib" -type d)) $(addprefix -l,$(ORGANIZED_LIBS))
 #Compile objects
 $(OBJT_DIR)/%.o : $(SRC_DIR)/%.cpp $(DEPS_DIR)
 	@mkdir -p $(dir $@)
@@ -57,12 +52,12 @@ ifneq ($(DEPS),)
 	@echo ----------------------------------------------------
 	@echo
 	@mkdir -p $(DEPS_DIR)
-	@for dep in $(DEPS) ; 												\
-		do DEP_NAME=$$( echo $$dep | sed 's/.*\///') ;  				\
-		echo Compiling $$dep ... ;										\
-		cd $$dep && $(MAKE) share && 									\
+	@for dep in $(DEPS) ;                                                   \
+		do DEP_NAME=$$( echo $$dep | sed 's/.*\///') ;                  \
+		echo Compiling $$dep ... ;                                      \
+		cd $$dep && $(MAKE) share &&                                    \
 		cp -r $$dep/$(BUILD_DIR)/$$DEP_NAME $(CURDIR)/$(DEPS_DIR) &&  	\
-		$(MAKE) clean ;													\
+		$(MAKE) clean ;                                                 \
 	done
 else
 	@echo $(PROJ_NAME) has no dependencies
@@ -83,9 +78,8 @@ share: compile_dependencies share_headers compile_lib
 run_tests: compile_tests
 	for test in $(TEST_TARGETS) ; do $$test ; done
 clean:
-	rm -rd build
+	rm -rf build || true
+clean_all: clean
+	for dep in $(DEPS) ; do cd $$dep && $(MAKE) clean_all ; done
 
 -include $(OBJTS_DEPS)
-
-
-

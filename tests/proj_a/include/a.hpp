@@ -1,3 +1,0 @@
-namespace a{
-    void test();
-}

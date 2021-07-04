@@ -47,9 +47,11 @@ Caven allows simple modular development:
  - Caven provides generic makefile (caven_make) for projects with the caven structure.
  - **Caven allows to easily import other Caven projects**
 
-Caven also allows multiple levels of not giving a fuck:
+Caven also allows multiple levels of not giving a fuck when making your Makefile:
  - Level 1: just import the caven_make in your make file and develop your project with no dependencies
  - Level 2: specify the directories of other caven projects (dependencies) in your makefile
+ - Level 3: specify additional flags you want to use when compiling
+ - Level 4: add your own targets
 
 ## The Caven project structure
 

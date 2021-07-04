@@ -1,4 +1,0 @@
-namespace b
-{
-    void print();
-} 
