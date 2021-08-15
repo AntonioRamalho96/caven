@@ -1,3 +1,0 @@
-DEPS=../proj_b ../proj_c
-
--include ../../Makefile

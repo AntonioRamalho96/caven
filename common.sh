@@ -1,4 +1,0 @@
-CAVEN_DIR=${PWD}/tests/installation_test
-BASH_RC_FILE=${CAVEN_DIR}/testrc
-CAVEN_GUARD_START="#_CAVEN_START_"
-CAVEN_GUARD_END="#_CAVEN_END___"
