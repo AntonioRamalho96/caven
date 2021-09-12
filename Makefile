@@ -56,15 +56,22 @@ show:
 show_all: 
 	@for dep in ${DEPS} ; do cd $$dep && ${MAKE} show ; done
 
-compile: compile_dependencies
+compile: compile_dependencies compile_fast
+
+compile_fast:
 	@echo "Compiling ${MODULE_NAME}..."
 	@${MAKE} -s ${OBJTS} show
 
 link_tests: compile ${TEST_TARGETS}
+link_tests_fast: compile_fast ${TEST_TARGETS}
+
 link_executables: compile ${EXE_TARGETS}
+link_executables_fast: compile_fast ${EXE_TARGETS}
 
+run_tests: link_tests do_run_tests
+run_tests_fast: link_tests_fast do_run_tests
 
-run_tests: link_tests 
+do_run_tests:
 	@printf "\n     RUNNING TESTS      \n\n"
 	@for test in ${TEST_TARGETS} ; do ./$$test ; done
 

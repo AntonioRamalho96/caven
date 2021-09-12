@@ -84,23 +84,17 @@ F_NAME
 When the project is built with caven, the build folder gets the following structure.
 
 build
-+---F_NAME
-   +---include
-   |  +---F_NAME
-   |     +---(header tree)
-   +---lib
-   |  +---libF_NAME.a
-   |
-   +---dependencies
-      +---FIRST_DEP
-      |  +---(same structure as build/F_NAME)
-      +---SECOND_DEP
-      +---THIRD_dep
-      (ect...)
-
-Caven compiles executables by:
- - include all "include" directories
- - link all lib directories and files inside them
++---include
+|  +---F_NAME
+|     +---(header tree)
++---objts
+|  +---deps
+|  |  +--- ${dependencies_objects}.o
+|  |
+|  +---*.o
+|
++---tests
+   +---${test_executables}
 
 
    
