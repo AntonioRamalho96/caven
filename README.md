@@ -70,31 +70,8 @@ F_NAME
 |   +---hide
 |       +--- (hiden_interfaces.hpp ...)
 +---src (source files)
-+---test
-|   +---(unit_tests_executables.cpp ...)      // these unit tests are run automatically with *make test*
-|   +---manual
-|       +---(unit_tests_executables.cpp ...)  // compiled as executables but aren't run automatically
-|
-+---executables
-    +--- (executables.cpp...)                 // work as executables or examples for your library
-
-
-
-## The Caven behaviour
-When the project is built with caven, the build folder gets the following structure.
-
-build
-+---include
-|  +---F_NAME
-|     +---(header tree)
-+---objts
-|  +---deps
-|  |  +--- ${dependencies_objects}.o
-|  |
-|  +---*.o
-|
-+---tests
-   +---${test_executables}
++---test (unit test executables)
++---executables (executable files)
 
 
    
