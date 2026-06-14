@@ -57,13 +57,15 @@ Caven also allows multiple levels of not giving a fuck when making your Makefile
 
 A caven project has the following structure:
 
+```
 F_NAME
 +---include (interfaces)
 +---src     (source files)
 +---Makefile
 +---caven_make (caven provides this file)
-
+```
 If you want to get more fancy, here is all the directories caven recognizes:
+```
 F_NAME
 +---include
 |   +---(interfaces.hpp ...)
@@ -72,7 +74,4 @@ F_NAME
 +---src (source files)
 +---test (unit test executables)
 +---executables (executable files)
-
-
-   
-
+```
