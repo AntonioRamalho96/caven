@@ -24,6 +24,14 @@ class Installer:
             self.src_installer.cleanup()
             exit(0)
 
+        if input.val_type == InstallInputType.DEPS:
+            module_src_path = Path(input.value).resolve()
+            module_info = self._get_source_info(module_src_path)
+            dependencies = module_info.dependencies
+            self._install_dependencies(dependencies, module_src_path, module_info.module_name)
+            self.src_installer.cleanup()
+            exit(0)
+
         if input.val_type == InstallInputType.UNINSTALL:
             try:
                 self._uninstall(input.value)

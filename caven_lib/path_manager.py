@@ -7,7 +7,7 @@ class EnvNotSetException(Exception):
     pass
 
 
-DEFAULT_ENV_PATH = "~/.caven"
+DEFAULT_ENV_PATH = Path("~/.caven").expanduser()
 
 def GetEnvPath() -> Path:
     env_path = os.environ.get("CAVEN_ENV_DIR", None)

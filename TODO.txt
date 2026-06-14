@@ -1,1 +1,12 @@
 Add misc/bin folder
+
+env
+Command to unset environment
+Command to clear environment
+Command to delete environment
+
+check
+Command to list all modules in environment
+
+install
+also remove modules that depend on uninstalled module (asking user)??

@@ -12,15 +12,14 @@ def parse_arguments():
 
     # Parse env option
     env_parser = subparsers.add_parser('env', help="Set a virtual environment")
-    env_options = env_parser.add_mutually_exclusive_group(required=True)
-    env_options.add_argument('-p', '--path', help=f"Path to the virtual environment, the default is {DEFAULT_ENV_PATH}", default=DEFAULT_ENV_PATH)
-    env_options.add_argument('-d', '--display', help=f"Display path to virtual environment", action="store_true")
+    env_options = env_parser.add_mutually_exclusive_group(required=False)
+    env_options.add_argument('-p', '--path', help=f"Path to the virtual environment to create, the default is {DEFAULT_ENV_PATH}", default=DEFAULT_ENV_PATH)
+    env_options.add_argument('-d', '--display', help=f"Display path to the currently active virtual environment", action="store_true")
 
     # Parse install option
     install_parser = subparsers.add_parser('install', help="Install one or more modules")
     install_options = install_parser.add_mutually_exclusive_group(required=True)
     install_options.add_argument("-d", "--dependencies", help= "Path to module source code, will install it's dependencies")
-    install_options.add_argument("-r", "--remote", help= "Git link to remote repository containing the module to install")
     install_options.add_argument("-s", "--source", help= "Path to folder containing the source of the module to install")
     install_options.add_argument("-u", "--uninstall", help= "Module name of module to uninstall")
 
@@ -39,7 +38,6 @@ def parse_arguments():
     use_options.add_argument("-if", "--include-flags", help= "Get compilation flags to include directories regarding this module(s)", action="store_true")
     use_options.add_argument("-l", "--lib-dir", help= "Path to folder containing installed module(s) shared library(s)", action="store_true")
     use_options.add_argument("-lf", "--lib-flags", help= "Return flags to link the desired module(s) shared library(s)", action="store_true")
-    use_options.add_argument("-ld", "--extend-ld", help= "Extends LD_LIBRARY_PATH with a module(s) shared library(s) directory", action="store_true")
 
     use_target = use_parser.add_mutually_exclusive_group(required=True)
     use_target.add_argument("-m", "--module", help="Name of the module")
@@ -72,7 +70,6 @@ def get_env_inputs(args):
 # ---------------------------------------------#
 class InstallInputType(Enum):
     DEPS = 1
-    REMOTE = 2
     SOURCE = 3
     UNINSTALL = 4
 
@@ -85,9 +82,6 @@ def get_install_inputs(args):
     if args.dependencies:
         inst_type = InstallInputType.DEPS
         value = args.dependencies
-    if args.remote:
-        inst_type = InstallInputType.REMOTE
-        value = args.remote
     if args.source:
         inst_type = InstallInputType.SOURCE
         value = args.source
@@ -135,7 +129,6 @@ class UseActionType(Enum):
     INC_FLAGS = 2
     LIB_DIR = 3
     LIB_FLAGS = 4
-    EXTEND_LD = 5
 
 class UseTargetType(Enum):
     MODULE=1
@@ -157,8 +150,6 @@ def get_use_inputs(args):
         use_action_type = UseActionType.LIB_DIR
     elif args.lib_flags:
         use_action_type = UseActionType.LIB_FLAGS
-    elif args.extend_ld:
-        use_action_type = UseActionType.EXTEND_LD
     
     # Parse target type and target
     if args.module:
