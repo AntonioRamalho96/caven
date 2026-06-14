@@ -1,0 +1,8 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": ["info.caven"],
+            "url": "./caven_info_schema.json"
+        }
+    ]
+}

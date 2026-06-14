@@ -1,0 +1,16 @@
+{
+    "type": "object",
+    "properties": {
+        "module_name": {"type": "string"},
+        "author": {"type": "string", "default": "Anonymous"},
+        "email": {"type": "string", "default": ""},
+        "version": {"type": "string", "default": "N/A"},
+        "description": {"type": "string", "default": "No description available"},
+        "dependencies": {"type": "array", "items": {"type": "string"}, "default": []},
+        "public_headers": {"type": "array", "items": {"type": "string"}, "default": []},
+        "header_root_dir": {"type": ["string", "null"]},
+        "library_dir": {"type": ["string", "null"]},
+        "build_cmd": {"type": "string", "default": "echo \"Nothing to be built\""}
+    },
+    "required": ["module_name"]
+}

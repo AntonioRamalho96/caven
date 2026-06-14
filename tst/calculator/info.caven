@@ -1,0 +1,7 @@
+{
+    "module_name": "calculator",
+    "build_cmd": "/bin/bash build.sh",
+    "public_headers": ["inc/calculator.hpp"],
+    "library_dir": ".",
+    "dependencies": ["my_module <- ../my_module"]
+}

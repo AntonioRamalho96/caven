@@ -1,0 +1,26 @@
+sources:
+  - name: local
+    pattern: '^(\.?\.?\/.*)$'
+    source_path: $1
+
+  - name: gh_http
+    pattern: '^gh:([A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?)/([A-Za-z0-9._-]+)$'
+    commands:
+      - "rm -rf /tmp/.caven/gh_src"
+      - "mkdir -p /tmp/.caven/gh_src"
+      - "git clone https://github.com/$1/$2.git /tmp/.caven/gh_src/$2"
+    source_path: "/tmp/.caven/gh_src/$2"
+    to_remove:
+      - /tmp/.caven/gh_src/$2
+    
+
+  - name: gh_http_at
+    pattern: '^gh:([A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?)/([A-Za-z0-9._-]+)@([A-Za-z0-9._/-]+)$'
+    commands:
+      - "rm -rf /tmp/.caven/gh_src"
+      - "mkdir -p /tmp/.caven/gh_src"
+      - "git clone https://github.com/$1/$2.git /tmp/.caven/gh_src/$2"
+      - "git -C /tmp/.caven/gh_src/$2 checkout $3"
+    source_path: "/tmp/.caven/gh_src/$2"
+    to_remove:
+      - /tmp/.caven/gh_src/$2

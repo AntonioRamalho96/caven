@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+from caven_lib.arg_parsing import parse_arguments, get_check_inputs, get_env_inputs, get_use_inputs, get_install_inputs
+from caven_lib.cmd_check import handle_check_cmd
+from caven_lib.cmd_env import handle_env_cmd
+from caven_lib.cmd_use import handle_use_cmd
+from caven_lib.cmd_install import Installer
+
+
+args = parse_arguments()
+if args.subcommand == "check":
+    handle_check_cmd(get_check_inputs(args))
+if args.subcommand == "use":
+    handle_use_cmd(get_use_inputs(args))
+if args.subcommand == "env":
+    handle_env_cmd(get_env_inputs(args))
+if args.subcommand == "install":
+    Installer().handle_install_cmd(get_install_inputs(args))
+
+

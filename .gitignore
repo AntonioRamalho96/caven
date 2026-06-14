@@ -1,2 +1,6 @@
 # Prerequisites
 **build/
+__pycache__
+pkg
+*.deb
+.caven_env
