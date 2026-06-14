@@ -4,7 +4,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd $SCRIPT_DIR/..
 
 echo "Removing caven"
-sudo apt remove caven || echo "Caven was not installed"
+yes | sudo apt remove caven || echo "Caven was not installed"
 
 echo "Installing caven from debian package"
 ./build_debian_package.sh
